@@ -82,3 +82,52 @@ value: world
 key: key space
 value: hii linux
 op
+
+stringVar="Apple Banana Orange Mango"
+
+echo ${stringVar[@]} # Apple Banana Orange Mango
+
+arrayVar=(${stringVar// / })
+
+echo ${arrayVar[1]} # Banana
+
+unset arrayVar
+unset stringVar
+
+
+stringVar="Apple+Banana+Orange+Mango"
+
+arrayVar=(${stringVar//+/ }) # replace + with blank-space
+
+echo ${stringVar[@]} # Apple+Banana+Orange+Mango
+echo ${arrayVar[@]}  # Apple Banana Orange Mango
+
+insert(){
+        h='
+#######################################
+# Usage: insert element at index
+# parameters:
+#       arrName
+#       index
+#       value
+######################################
+        ' 
+        [[ $1 = -h ]] && { echo "$h" > /dev/stderr; return 1; }
+        declare -n __arr__=$1
+        i=$2
+        el="$3"
+
+        [[ ! "$i" =~ ^[0-9]+$  ]] && { echo "Index must be a valid integer" >/dev/stderr; return 1;}
+
+        (( $1 < 0 )) && { echo "index must be positive integer" >dev/stderr; return 1;}
+
+        __arr__=( "${__arr__[@]:0:$i}" "$el" "${__arr__[@]:$i}" )
+}
+
+arr=(a b c d)
+
+echo ${ar[2]} # c
+
+insert arr 2 'bc'
+
+echo ${arr[@]} # a b bc c d
