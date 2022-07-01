@@ -1,2 +1,37 @@
+#!/bin/bash
+
+#------------------------------------------
+# Purpose:
+# Created Date:  Thursday 02 June 2022 01:43:51 PM IST
+# Author: Harsh Panchal
+
+# Usage:
+#------------------------------------------
+
 gcc -std=c99 -Wall -Wextra -Wpedantic -Werror $1 -o tempout &&\
     ./tempout && rm tempout
+
+# crun
+#
+# A script to invoke gcc, build the executable, execute the binary,
+# and cleanup after. The script will exit without running the executable
+# if there are any compiler errors or warnings.
+#
+# This script uses -std=c18, but it could probably be modified so that
+# the version is taken from a command-line parameter, defaulting to c18.
+#
+# Any commands following the crun invocation are appended to CMD.
+
+#CMD="gcc -std=c18 -Wall -Wextra -Wpedantic -Werror"
+#TEMPFILE="tempfile$$"
+#for ARG in "$@"
+#do
+#    CMD+=" $ARG"
+#done
+#CMD+=" -o ${TEMPFILE} && ./${TEMPFILE} && rm ${TEMPFILE}"
+
+#eval $CMD
+#Now if I need to link in, e.g., the math library:
+
+#crun myfile.c -lm
+#does the trick, failing if there are any errors or warnings (which are turned up to reasonable levels), and cleaning up after itself.
