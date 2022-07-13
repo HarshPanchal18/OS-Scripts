@@ -22,3 +22,60 @@
 `set -x` # Enable a mode of the shell where all executed commands are printed to the terminal.
 
 `set +x` # Disable a mode of the shell where all executed commands are printed to the terminal.
+
+`echo **`
+#### - The ** can be thought of a path expansion, no matter how deep the path is. This example matches any file or folder that starts with deep , regardless of how deep it is nested:
+
+`echo **/deep*`
+> Output:
+>> folder/anotherfolder/content/deepfolder folder/subfolder/content/deepfolder
+
+#### - The ? simply matches exactly one character
+
+`echo ?acy`
+#macy
+
+`echo ??acy`
+#stacy tracy
+
+#### - If there is a need to match specific characters then '[ ]' can be used. Any character inside '[ ]' will be matched exactly once.
+
+`echo [m]acy`
+#macy
+
+`echo [st][tr]acy`
+#stacy tracy
+
+#### - The [] glob, however, is more versatile than just that. It also allows for a negative match and even matching ranges of characters and character classes. A negative match is achieved by using ! or ^ as the first character following [ .
+
+#### - We can match stacy by
+`echo [!t][^r]acy`
+#stacy
+
+#### - Here we are telling bash the we want to match only files which do not not start with a t and the second letter is not an r and the file ends in acy .
+
+#### - Ranges can be matched by seperating a pair of characters with a hyphen ( - ). Any character that falls between those two enclosing characters - inclusive - will be matched. E.g., [r-t] is equivalent to [rst]
+`echo [r-t][r-t]acy`
+#stacy tracy
+
+#### - Character classes can be matched by [:class:] , e.g., in order to match files that contain a whitespace
+
+`echo *[[:blank:]]*`
+#file with space
+
+#### - There are a few ways to determine the current shell
+`echo $0
+ps -p $$
+echo $SHELL`
+
+#### - To list available login shells :
+
+`cat /etc/shells` # run from the HOME directory
+
+```console
+/etc/shells: valid login shells
+/bin/sh
+/bin/dash
+/bin/bash
+/bin/rbash
+```
