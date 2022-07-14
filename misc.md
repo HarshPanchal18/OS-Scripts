@@ -79,3 +79,73 @@ echo $SHELL`
 /bin/bash
 /bin/rbash
 ```
+
+#### - To change the current bash
+```
+export SHELL=/bin/bash
+exec /bin/bash
+```
+
+#### - To change the bash that opens on startup edit .profile and add those lines
+
+#### - To get the number of command line arguments or positional parameters
+`echo "$#"`
+
+#### - When run with three arguments the example above will result with the output:
+`$ ./testscript.sh firstarg secondarg thirdarg` #3
+
+#### - The maximum number of remembered commands:
+`/$ echo $HISTSIZE`
+#1000
+
+#### - To get the name of the current function:
+`my_function()
+{
+    echo "This function is $FUNCNAME"
+}`
+
+_"This function is my_function"_
+
+#### - This instruction will return nothing if you type it outside the function:
+`my_function`
+`echo "This function is $FUNCNAME"`
+_"This function is"_
+
+#### - Contains the Internal Field Separator string that bash uses to split strings when looping etc.
+#### - The default is the white space characters: `\n (newline)`, `\t (tab)` and `space`.
+#### - Changing this to something else allows you to split strings using different characters:
+```
+IFS=","
+INPUTSTR="a,b,c,d"
+
+for field in ${INPUTSTR}
+do
+    echo $field
+done
+```
+
+```
+a
+b
+c
+d
+```
+#### - This is responsible for the phenomenon known as word splitting.
+
+#### - OLDPWD (OLDPrintWorkingDirectory) contains directory before the last cd command:
+
+```
+cd directory
+directory> $ echo $OLDPWD
+/home/user
+```
+
+#### - PWD (PrintWorkingDirectory) The current working directory you are in at the moment:
+
+```
+echo $PWD
+/home/user
+~> $ cd directory
+directory> $ echo $PWD
+/home/user/directory
+```
