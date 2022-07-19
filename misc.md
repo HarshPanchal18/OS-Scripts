@@ -149,3 +149,67 @@ echo $PWD
 directory> $ echo $PWD
 /home/user/directory
 ```
+
+#### - Positional parameters passed to the script from either the command line or a function:
+$n is the n'th positional parameter
+```
+echo "$1"
+echo "$2"
+echo "$3"
+```
+
+`./testscript.sh firstarg secondarg thirdarg`
+```
+firstarg
+secondarg
+thirdarg
+```
+
+#### - If number of positional argument is greater than nine, curly braces must be used.
+
+#### *"set -- "* sets positional parameters
+`set -- 1 2 3 4 5 6 7 8 nine ten eleven twelve`
+#### the following line will output 10 not 1 as the value of $1 the digit 1 will be concatenated with the following 0
+`echo $10` outputs 1
+
+`echo ${10}` outputs ten
+
+to show this clearly:
+```
+set -- arg{1..12}
+echo $10
+echo ${10}
+```
+
+#### - Will return all of the positional parameters in a single string.
+_testscript.sh:_
+
+`echo "$*"`
+
+Run the script with several arguments:
+```
+./testscript.sh firstarg secondarg thirdarg
+```
+
+- Output:
+`firstarg secondarg thirdarg`
+
+#### - The Process ID (pid) of the last job run in the background:
+```
+ls &
+testfile1 testfile2
+[1]+ Done          ls
+~> $ echo $!
+21715
+```
+#### - _The exit status of the last executed function or command. Usually 0 will mean OK anything else will indicate a failure:_
+
+```
+ls *.blah;echo $?
+
+ls: cannot access *.blah: No such file or directory
+2
+ls;echo $?
+testfile1 testfile2
+0
+```
