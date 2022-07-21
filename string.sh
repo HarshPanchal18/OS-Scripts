@@ -35,3 +35,47 @@ echo ${a/#i/N} # replace the first
 echo ${a/%g/N} # replace the last element
 
 echo ${a/%g/} # replace woth nothing
+
+a=(hello world)
+
+echo ${a[@]/#/R} # add prefix (here 'R') to the element
+
+#delete a pattern from the beginning of a string
+
+#shortest match
+a='I am a string'
+echo ${a#*a} # m a string
+#longest match
+echo ${a##*a} # string (as it deletes till last match)
+
+# '#' deletes from the beginning
+# '%' deletes from the end (Reverse Order)
+var="Apple Orange"
+echo ${var%% *} # Apple
+echo ${var%%*} # <blank>
+echo ${var%% * } # Apple Orange
+echo ${var##* } # Orange (Last element)
+echo ${var## *} # Apple Orange
+echo ${var## * } # Apple Orange
+
+var="Apple Grape Orange"
+echo "${var% *}" #Apple Grape
+echo "${var#* }" #Grape Orange
+
+#parameter indirection
+
+red="Red"
+green="Green"
+
+color=red
+echo "${!color}"
+
+color=green
+echo "${!color}"
+
+foo=10
+x=foo
+
+echo $x # foo
+
+echo ${!x} #10, indirect expansion
