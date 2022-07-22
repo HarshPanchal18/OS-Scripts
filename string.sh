@@ -79,3 +79,65 @@ x=foo
 echo $x # foo
 
 echo ${!x} #10, indirect expansion
+
+#one more exmpale
+argtester() { for (( i=1; i<="$#"; i++ )); do echo "$i"; done;  };
+argtester -ab -cd -ef # 1 2 3
+
+argtester() { for (( i=1; i<="$#"; i++ )); do echo "${!i}"; done;  };
+
+argtester -ab -cd -ef # print args...
+
+unset var
+echo ${var:-XX}
+
+var=""
+echo ${var:-XX}
+
+var=23
+echo ${var:-XX}
+
+${para:=word}
+
+# if para is unset or null, the expansion of word is assigned to para.. The value of para.is then substituted. Positional paras and special para may not be assigned to in this way.
+
+echo
+
+unset var
+echo ${var:=XX}
+echo $var
+
+var=""
+echo ${var:=XX}
+echo $var
+
+var=23
+echo ${var:=XX}
+echo $var
+
+
+#delete a pattern from the end of a string
+
+a='I am a string'
+echo ${a%a*} # I am
+echo ${a%%a*} # I
+
+#munging during expansion
+# Variables don't necessarily have to expand to their values - substrings can be extracted during expansion, which
+#can be useful for extracting file extensions or parts of paths. Globbing characters keep their usual meanings, so .*
+#refers to a literal dot, followed by any sequence of characters; it's not a regular expression.
+
+v=foo-bar-baz
+echo ${v%%-*} # foo
+
+echo ${v%-*} # foo-bar
+
+echo ${v##*-} # baz
+
+echo ${v#*-} # bar-baz
+
+#EDITOR=nano
+${EDITOR:-vim} /tmp/f # opens nano
+
+#unset EDITOR
+${EDITOR:-vim} /tmp/f # opens vim
