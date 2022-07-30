@@ -141,3 +141,63 @@ ${EDITOR:-vim} /tmp/f # opens nano
 
 #unset EDITOR
 ${EDITOR:-vim} /tmp/f # opens vim
+
+a="set"
+b=""
+unset c
+
+echo ${a:-default_a} ${b:-default_b} ${c:-default_c} # set default_b default_c
+
+echo ${a-default_a} ${b-default_b} ${c-default_c} # set default_c
+
+echo ${a:+default_a} ${b:+default_b} # default_a
+
+
+
+# error if variable is empty or unset
+
+FOO=
+#echo "FOO is ${FOO:?EMPTY}" # FOO: EMPTY
+#echo "FOO is ${FOO:?UNSET}" # FOO: UNSET (If you remove ':', it only prints "FOO is"
+
+#echo "bar is ${bar:?EMPTY}" # bar is EMPTY
+#echo "bar is ${bar?UNSET}" # bar is UNSET
+
+# Comparison and Matching
+
+s='abc'
+p1='a*'
+p2='*c'
+# be aware of wildcard characters
+if [[ "$s" == $p1 ]]; then
+    echo "$s matches the pattern"
+fi
+if [[ "$s" == $p2 ]]; then
+    echo "$s doesn't match"
+fi
+
+if [[ -n "$s" ]]; then
+    echo "$s is non-empty"
+fi
+if [[ -z "${s// }" ]]; then
+    echo "$s is empty or contains only spaces"
+fi
+if [[ -z "$s" ]]; then
+    echo "$s is empty"
+fi
+
+param="foo,bar,bash"
+IFS=',' read -r -a array <<< "$param"
+
+echo $param
+
+for ele in "${array[@]}"
+do
+    echo "$ele"
+done
+
+
+for index in "${!array[@]}"
+do
+    echo $index ${array[index]}
+done
