@@ -213,3 +213,47 @@ ls;echo $?
 testfile1 testfile2
 0
 ```
+
+#### - The Process ID (pid) of the current process:
+```
+echo $$
+13246
+```
+
+#### - Each time this parameter is referenced, a random integer between 0 and 32767 is generated.
+#### - Assigning a value to this variable seeds the random number generator (source).
+
+```
+echo $RANDOM
+27119
+echo $RANDOM
+1349
+```
+
+`$BASHPID` 
+#### - Process ID (pid) of the current instance of Bash. This is not the same as the $$ variable, but it often gives the same result. This is new in Bash 4 and doesn't work in Bash 3.
+
+```
+echo "\$\$ pid = $$ BASHPID = $BASHPID"
+$$ pid = 9265 BASHPID = 9265
+```
+
+`$BASH_ENV` 
+#### - An environment variable pointing to the Bash startup file which is read when a script is invoked.
+
+`$BASH_VERSINFO`
+#### - An array containing the full version information split into elements, much more convenient than $BASH_VERSION if you're just looking for the major version:
+```
+for ((i=0; i<=5; i++)); do echo "BASH_VERSINFO[$i] = ${BASH_VERSINFO[$i]}"; done
+
+BASH_VERSINFO[0] = 3
+BASH_VERSINFO[1] = 2
+BASH_VERSINFO[2] = 25
+BASH_VERSINFO[3] = 1
+BASH_VERSINFO[4] = release
+BASH_VERSINFO[5] = x86_64-redhat-linux-gnu
+```
+
+`$BASH_VERSION` - Shows the version of bash that is running, this allows you to decide whether you can use any advanced features:
+
+`echo $BASH_VERSION` -> 4.1.2(1)-release
