@@ -19,13 +19,13 @@
 #### - Turn on/off debugging within a bash script.
 - It may optionally be turned back on, though debug output is automatically reset when the script exits.
 
-`set -x` # Enable a mode of the shell where all executed commands are printed to the terminal.
+`set -x` -  *Enable a mode of the shell where all executed commands are printed to the terminal.*
 
-`set +x` # Disable a mode of the shell where all executed commands are printed to the terminal.
+`set +x` - *Disable a mode of the shell where all executed commands are printed to the terminal.*
 
-`echo **`
-#### - The ** can be thought of a path expansion, no matter how deep the path is. This example matches any file or folder that starts with deep , regardless of how deep it is nested:
+`echo **` - *The ** can be thought of a path expansion, no matter how deep the path is.* 
 
+This example matches any file or folder that starts with deep , regardless of how deep it is nested:
 `echo **/deep*`
 > Output:
 >> folder/anotherfolder/content/deepfolder folder/subfolder/content/deepfolder
@@ -55,13 +55,11 @@
 #### - Here we are telling bash the we want to match only files which do not not start with a t and the second letter is not an r and the file ends in acy .
 
 #### - Ranges can be matched by seperating a pair of characters with a hyphen ( - ). Any character that falls between those two enclosing characters - inclusive - will be matched. E.g., [r-t] is equivalent to [rst]
-`echo [r-t][r-t]acy`
-#stacy tracy
+`echo [r-t][r-t]acy` - *stacy tracy*
 
 #### - Character classes can be matched by [:class:] , e.g., in order to match files that contain a whitespace
 
-`echo *[[:blank:]]*`
-#file with space
+`echo *[[:blank:]]*` - *file with space*
 
 #### - There are a few ways to determine the current shell
 `echo $0
@@ -88,15 +86,13 @@ exec /bin/bash
 
 #### - To change the bash that opens on startup edit .profile and add those lines
 
-#### - To get the number of command line arguments or positional parameters
-`echo "$#"`
+`echo "$#"` - *To get the number of command line arguments or positional parameters*
 
 #### - When run with three arguments the example above will result with the output:
-`$ ./testscript.sh firstarg secondarg thirdarg` #3
+`$ ./testscript.sh firstarg secondarg thirdarg` - *3*
 
 #### - The maximum number of remembered commands:
-`/$ echo $HISTSIZE`
-#1000
+`/$ echo $HISTSIZE` - *1000*
 
 #### - To get the name of the current function:
 `my_function()
@@ -256,4 +252,58 @@ BASH_VERSINFO[5] = x86_64-redhat-linux-gnu
 
 `$BASH_VERSION` - Shows the version of bash that is running, this allows you to decide whether you can use any advanced features:
 
-`echo $BASH_VERSION` -> 4.1.2(1)-release
+`echo $BASH_VERSION` -> *4.1.2(1)-release*
+
+`$EDITOR` - The default editor that will be involked by any scripts or programs, usually vi or emacs.
+`echo $EDITOR`
+
+`$HOSTNAME` - The hostname assigned to the system during startup.
+`echo $HOSTNAME` - *kali*
+
+`$HOSTTYPE` - This variable identifies the hardware, it can be useful in determining which binaries to execute:
+`echo $HOSTTYPE` - *x86_64*
+
+`$MACHTYPE` - Similar to $HOSTTYPE above, this also includes information about the OS as well as hardware
+`echo $MACHTYPE` - *x86_64-pc-kali-linux-gnu*
+
+`$OSTYPE` - Returns information about the type of OS running on the machine, eg.
+`echo $OSTYPE` - *linux-gnu*
+
+`$PATH` - *The search path for finding binaries for commands.*
+
+Common examples include `/usr/bin` and `/usr/local/bin`.
+
+When a user or script attempts to run a command, the paths in $PATH are searched in order to find a matching file with execute permission.
+
+The directories in `$PATH` are separated by a : character.
+`echo "$PATH"` - *`/usr/kerberos/bin:/usr/local/bin:/bin:/usr/bin`
+
+So, for example, given the above $PATH , if you type `lss` at the prompt, the shell will look for `/usr/kerberos/bin/lss` , then `/usr/local/bin/lss` , then `/bin/lss` , then `/usr/bin/lss` , in this order, before concluding that there is no such command.
+
+`$PPID` - *The Process ID (pid) of the script or shell's parent, meaning the process than invoked the current script or shell.*
+`echo $$` - *13016*
+`echo $PPID` - *13015*
+
+`$SECONDS` - *The number of seconds a script has been running. This can get quite large if shown in the shell:*
+`echo $SECONDS` - *98834*
+
+`$SHELLOPTS` - *A readonly list of the options bash is supplied on startup to control its behaviour:*
+`echo $SHELLOPTS` - `braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor`
+
+`$_` - *Outputs the last field from the last command executed, useful to get something to pass onwards to another command:*
+`ls *.sh;echo $_`
+```
+testscript1.sh testscript2.sh
+testscript2.sh
+```
+It gives the script path if used before any other commands:
+
+_test.sh:_
+`echo "$_"`
+
+*Output:*
+```
+./test.sh # running test.sh
+./test.sh
+```
+*Note: This is not a foolproof way to get the script path*
