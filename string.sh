@@ -201,3 +201,26 @@ for index in "${!array[@]}"
 do
     echo $index ${array[index]}
 done
+
+#Get captured groups from a regex match against a string
+a='I am a simple string with digits 1234'
+pat='(.*) ([0-9]+)'
+[[ $a =~ $pat ]]
+
+echo "${BASH_REMATCH[0]}"
+echo "${BASH_REMATCH[1]}"
+echo "${BASH_REMATCH[2]}"
+
+<<output
+I am a 548 simple string with digits 1234
+I am a 548 simple string with digits
+1234
+output
+
+
+#Check if a string matches a regular expression
+date=20150624
+[[ $date =~ ^[0-9]{8}$ ]] && echo "yes" || echo "no" #yes
+
+date=hellorte
+[[ $date =~ ^[a-z]{8}$ ]] && echo "yes" || echo "no" #yes
