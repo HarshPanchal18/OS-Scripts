@@ -224,3 +224,35 @@ date=20150624
 
 date=hellorte
 [[ $date =~ ^[a-z]{8}$ ]] && echo "yes" || echo "no" #yes
+
+# Regex matching
+
+pat='[^0-9]+([0-9]+)'
+s='I am a string with some digitd 1024'
+[[ $s =~ $pat ]] # $pat must be unquoted
+
+echo "${BASH_REMATCH[0]}"
+echo "${BASH_REMATCH[1]}"
+
+#I am a string with some digitd 1024
+#1024
+
+
+#Looping through a string line by line
+
+var='line1
+line2
+line3'
+
+while IFS= read -r line
+do
+    echo "-$line-"
+done <<< "$var"
+
+echo ""
+
+readarray -t arr <<< "$var"
+for i in "${arr[@]}"
+do
+    echo "-$i-"
+done
