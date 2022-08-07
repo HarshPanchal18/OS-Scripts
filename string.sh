@@ -256,3 +256,58 @@ for i in "${arr[@]}"
 do
     echo "-$i-"
 done
+
+#Read lines of a string into an array
+
+var='line 1
+line 2
+line 3'
+readarray -t arr <<< "$var"
+
+echo "${arr[@]}"
+
+#With Loop
+
+arr=()
+while IFS= read -r line
+do
+    arr+=("$line")
+done <<< "$var"
+
+
+echo "${arr[@]}"
+
+#REad a string field by field
+
+#separator is :
+
+var='line:1
+line:2
+line3'
+
+while IFS= read -d : -r field || [ -n "$field" ]
+do
+    echo "-$field-"
+done <<<"$var"
+
+<<op
+-line-
+-1
+line-
+-2
+line3
+'
+op
+
+#Read fields of a string into an array
+#separotor is :
+
+var='1:2:3:4:
+newline'
+arr=()
+while IFS= read -d : -r field || [ -n "$field" ]
+do
+    arr+=("$field")
+done <<< "$var"
+
+echo "${arr[4]}"
