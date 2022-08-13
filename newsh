@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo '#!/bin/bash' >> $1 # Use single quote to not execute
+echo '' >> $1
+echo '#------------------------------------------' >> $1
+echo '# Purpose: ' >> $1
+echo '# Created Date: ' `date` >> $1
+echo '# © Author: Harsh Panchal' >> $1
+echo '' >> $1
+echo '# Modify this script for your own purposes.' >> $1
+echo '' >> $1
+echo '# Usage: ' >> $1
+echo '#------------------------------------------' >> $1
+echo '' >> $1
+echo '' >> $1
+
+chmod +x $1
+vim $1 +13
