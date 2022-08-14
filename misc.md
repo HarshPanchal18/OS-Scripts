@@ -79,7 +79,7 @@ echo $SHELL`
 ```
 
 #### - To change the current bash
-```
+```console
 export SHELL=/bin/bash
 exec /bin/bash
 ```
@@ -110,7 +110,7 @@ _"This function is"_
 #### - Contains the Internal Field Separator string that bash uses to split strings when looping etc.
 #### - The default is the white space characters: `\n (newline)`, `\t (tab)` and `space`.
 #### - Changing this to something else allows you to split strings using different characters:
-```
+```bash
 IFS=","
 INPUTSTR="a,b,c,d"
 
@@ -130,7 +130,7 @@ d
 
 #### - OLDPWD (OLDPrintWorkingDirectory) contains directory before the last cd command:
 
-```
+```console
 cd directory
 directory> $ echo $OLDPWD
 /home/user
@@ -138,7 +138,7 @@ directory> $ echo $OLDPWD
 
 #### - PWD (PrintWorkingDirectory) The current working directory you are in at the moment:
 
-```
+```console
 echo $PWD
 /home/user
 ~> $ cd directory
@@ -148,14 +148,14 @@ directory> $ echo $PWD
 
 #### - Positional parameters passed to the script from either the command line or a function:
 $n is the n'th positional parameter
-```
+```console
 echo "$1"
 echo "$2"
 echo "$3"
 ```
 
 `./testscript.sh firstarg secondarg thirdarg`
-```
+```console
 firstarg
 secondarg
 thirdarg
@@ -171,7 +171,7 @@ thirdarg
 `echo ${10}` outputs ten
 
 to show this clearly:
-```
+```console
 set -- arg{1..12}
 echo $10
 echo ${10}
@@ -183,7 +183,7 @@ _testscript.sh:_
 `echo "$*"`
 
 Run the script with several arguments:
-```
+```console
 ./testscript.sh firstarg secondarg thirdarg
 ```
 
@@ -191,7 +191,7 @@ Run the script with several arguments:
 `firstarg secondarg thirdarg`
 
 #### - The Process ID (pid) of the last job run in the background:
-```
+```console
 ls &
 testfile1 testfile2
 [1]+ Done          ls
@@ -200,7 +200,7 @@ testfile1 testfile2
 ```
 #### - _The exit status of the last executed function or command. Usually 0 will mean OK anything else will indicate a failure:_
 
-```
+```console
 ls *.blah;echo $?
 
 ls: cannot access *.blah: No such file or directory
@@ -211,7 +211,7 @@ testfile1 testfile2
 ```
 
 #### - The Process ID (pid) of the current process:
-```
+```bash
 echo $$
 13246
 ```
@@ -219,7 +219,7 @@ echo $$
 #### - Each time this parameter is referenced, a random integer between 0 and 32767 is generated.
 #### - Assigning a value to this variable seeds the random number generator (source).
 
-```
+```console
 echo $RANDOM
 27119
 echo $RANDOM
@@ -229,7 +229,7 @@ echo $RANDOM
 `$BASHPID` 
 #### - Process ID (pid) of the current instance of Bash. This is not the same as the $$ variable, but it often gives the same result. This is new in Bash 4 and doesn't work in Bash 3.
 
-```
+```console
 echo "\$\$ pid = $$ BASHPID = $BASHPID"
 $$ pid = 9265 BASHPID = 9265
 ```
@@ -239,7 +239,7 @@ $$ pid = 9265 BASHPID = 9265
 
 `$BASH_VERSINFO`
 #### - An array containing the full version information split into elements, much more convenient than $BASH_VERSION if you're just looking for the major version:
-```
+```bash
 for ((i=0; i<=5; i++)); do echo "BASH_VERSINFO[$i] = ${BASH_VERSINFO[$i]}"; done
 
 BASH_VERSINFO[0] = 3
@@ -307,3 +307,83 @@ _test.sh:_
 ./test.sh
 ```
 *Note: This is not a foolproof way to get the script path*
+
+#### - $GROUPS - _An array containing the numbers of groups the user is in:_
+
+```bash
+#!/usr/bin/env bash
+echo You are assigned to the following groups:
+for group in ${GROUPS[@]}; do
+    IFS=: read -r name dummy number members < <(getent group $group )
+    printf "name: %-10s number: %-15s members: %s\n" "$name" "$number" "$members"
+done
+```
+
+```console
+You are assigned to the following groups:
+name: root       number: 0            members:
+name: kaboxer    number: 142          members: harsh,root
+```
+
+`$LINENO` - _Outputs the line number in the current script. Mostly useful when debugging scripts._
+```bash
+
+# this is line 2
+echo something # this is line 3
+echo $LINENO # Will output 4
+```
+
+`$SHLVL` - _When the bash command is executed a new shell is opened. The $SHLVL environment variable holds the number of shell levels the current shell is running on top of._
+
+#### - In a new terminal window, executing the following command will produce different results based on the Linux distribution in use.
+
+`echo $SHLVL`
+
+#### - Using Fedora 25, the output is "3". This indicates, that when opening a new shell, an initial bash command executes and performs a task. The initial bash command executes a child process (another bash command) which, in turn, executes a final bash command to open the new shell. When the new shell opens, it is running as a child process of 2 other shell processes, hence the output of "3".
+
+#### - In the following example (given the user is running Fedora 25), the output of $SHLVL in a new shell will be set to "3".
+#### As each bash command is executed, $SHLVL increments by one.
+
+```console
+echo $SHLVL #3
+bash
+echo $SHLVL
+4
+bash
+echo $SHLVL
+5
+```
+
+####  _One can see that executing the 'bash' command (or executing a bash script) opens a new shell. In comparison, sourcing a script runs the code in the current shell._
+
+```bash
+#test1.sh
+#!/usr/bin/env bash
+echo "Hello from test1.sh. My shell level is $SHLVL"
+source "test2.sh"
+```
+
+```bash
+#test2.sh
+#!/usr/bin/env bash
+echo "Hello from test2.sh. My shell level is $SHLVL"
+```
+
+```bash
+#run.sh
+#!/usr/bin/env bash
+echo "Hello from run.sh. My shell level is $SHLVL"
+./test1.sh
+```
+#### - Execute:
+```console
+chmod +x test1.sh && chmod +x run.sh
+./run.sh
+test1.sh
+```
+
+```console
+Hello from run.sh. My shell level is 4
+Hello from test1.sh. My shell level is 5
+Hello from test2.sh. My shell level is 5
+```
