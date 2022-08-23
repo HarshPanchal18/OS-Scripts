@@ -12,7 +12,7 @@
 
 `echo {a..d}{1..3}` # a1 a2 a3 b1 b2 b3 c1 c2 c3 d1 d2 d3
 
-
+----
 #### - To make multiple directories with sub-dir
 `mkdir -p toplevel/sublevel_{01..02}/{child1,child2,child3}`
 
@@ -60,7 +60,7 @@ This example matches any file or folder that starts with deep , regardless of ho
 #### - Character classes can be matched by [:class:] , e.g., in order to match files that contain a whitespace
 
 `echo *[[:blank:]]*` - *file with space*
-
+----
 #### - There are a few ways to determine the current shell
 `echo $0
 ps -p $$
@@ -190,6 +190,7 @@ Run the script with several arguments:
 - Output:
 `firstarg secondarg thirdarg`
 
+----
 #### - The Process ID (pid) of the last job run in the background:
 ```console
 ls &
@@ -233,7 +234,7 @@ echo $RANDOM
 echo "\$\$ pid = $$ BASHPID = $BASHPID"
 $$ pid = 9265 BASHPID = 9265
 ```
-
+----
 `$BASH_ENV` 
 #### - An environment variable pointing to the Bash startup file which is read when a script is invoked.
 
@@ -256,7 +257,7 @@ BASH_VERSINFO[5] = x86_64-redhat-linux-gnu
 
 `$EDITOR` - The default editor that will be involked by any scripts or programs, usually vi or emacs.
 `echo $EDITOR`
-
+----
 `$HOSTNAME` - The hostname assigned to the system during startup.
 `echo $HOSTNAME` - *kali*
 
@@ -289,7 +290,7 @@ So, for example, given the above $PATH , if you type `lss` at the prompt, the sh
 
 `$SHELLOPTS` - *A readonly list of the options bash is supplied on startup to control its behaviour:*
 `echo $SHELLOPTS` - `braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor`
-
+----
 `$_` - *Outputs the last field from the last command executed, useful to get something to pass onwards to another command:*
 `ls *.sh;echo $_`
 ```
@@ -324,7 +325,7 @@ You are assigned to the following groups:
 name: root       number: 0            members:
 name: kaboxer    number: 142          members: harsh,root
 ```
-
+----
 `$LINENO` - _Outputs the line number in the current script. Mostly useful when debugging scripts._
 ```bash
 
@@ -332,7 +333,7 @@ name: kaboxer    number: 142          members: harsh,root
 echo something # this is line 3
 echo $LINENO # Will output 4
 ```
-
+----
 `$SHLVL` - _When the bash command is executed a new shell is opened. The $SHLVL environment variable holds the number of shell levels the current shell is running on top of._
 
 #### - In a new terminal window, executing the following command will produce different results based on the Linux distribution in use.
@@ -353,7 +354,7 @@ bash
 echo $SHLVL
 5
 ```
-
+----
 ####  _One can see that executing the 'bash' command (or executing a bash script) opens a new shell. In comparison, sourcing a script runs the code in the current shell._
 
 ```bash
@@ -387,3 +388,66 @@ Hello from run.sh. My shell level is 4
 Hello from test1.sh. My shell level is 5
 Hello from test2.sh. My shell level is 5
 ```
+----
+`$UID` - # _A read only variable that stores the users' ID number:_
+```console
+echo $UID
+12345
+```
+
+```console
+fg %2
+sleep 600
+```
+#### - %2 specifies job no. 2. If fg is used without any arguments if brings the last process put in background to the foreground.
+
+```console
+fg %?sle
+sleep 500
+```
+#### - _?sle refers to the baground process command containing "sle". If multiple background commands contain the string, it will produce an error.
+
+#### Restart stopped background process
+```console
+bg
+[8]+ sleep 600 &
+```
+
+#### - Run command in background
+```console
+sleep 500 &
+[1] 7582
+```
+#### - Puts the sleep command in background. 7582 is the process id of the background process.
+
+#### - Stop a foreground process
+_Press Ctrl + Z to stop a foreground process and put it in background_
+```console
+sleep 600
+^Z
+[8]+ Stopped       sleep 600
+```
+----
+#### - Splitting Files
+_Sometimes its useful to split a file into multiple separate files. If you have large files, it might be a good idea to break it into smaller chunks_
+
+#### - Split a file - *Running the split command without any options will split a file into 1 or more separate files containing up to 1000 lines each.
+
+`split file`
+
+### - This will create files named xaa , xab , xac , etc, each containing up to 1000 lines. As you can see, all of them are prefixed with the letter x by default. If the initial file was less than 1000 lines, only one such file would be created.
+
+#### - To change the prefix, add your desired prefix to the end of the command line split file customprefix
+
+#### - Now files named customprefixaa , customprefixab , customprefixac etc. will be created
+
+#### - To specify the number of lines to output per file, use the -l option. The following will split a file into a maximum of 5000 lines
+
+`split -l5000 file`
+#OR
+`split --lines=5000 file`
+
+#### - Alternatively, you can specify a maximum number of bytes instead of lines. This is done by using the -b or --bytes options. For example, to allow a maximum of 1MB
+
+`split --bytes=1MB file`
+----
