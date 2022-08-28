@@ -282,14 +282,19 @@ The directories in `$PATH` are separated by a : character.
 So, for example, given the above $PATH , if you type `lss` at the prompt, the shell will look for `/usr/kerberos/bin/lss` , then `/usr/local/bin/lss` , then `/bin/lss` , then `/usr/bin/lss` , in this order, before concluding that there is no such command.
 
 `$PPID` - *The Process ID (pid) of the script or shell's parent, meaning the process than invoked the current script or shell.*
+
 `echo $$` - *13016*
+
 `echo $PPID` - *13015*
 
 `$SECONDS` - *The number of seconds a script has been running. This can get quite large if shown in the shell:*
+
 `echo $SECONDS` - *98834*
 
 `$SHELLOPTS` - *A readonly list of the options bash is supplied on startup to control its behaviour:*
+
 `echo $SHELLOPTS` - `braceexpand:emacs:hashall:histexpand:history:interactive-comments:monitor`
+
 ----
 `$_` - *Outputs the last field from the last command executed, useful to get something to pass onwards to another command:*
 `ls *.sh;echo $_`
@@ -450,4 +455,88 @@ _Sometimes its useful to split a file into multiple separate files. If you have 
 #### - Alternatively, you can specify a maximum number of bytes instead of lines. This is done by using the -b or --bytes options. For example, to allow a maximum of 1MB
 
 `split --bytes=1MB file`
+
 ----
+
+#### * File transfer using scp
+##### - To transfer a file securely to another machine - type:
+```console
+scp file1.txt tom@server2:$HOME
+```
+#### - This example presents transferring file1.txt from our host to server2 's user tom 's home directory.
+
+#### * scp transferring multiple files
+##### - scp can also be used to transfer multiple files from one server to another. Below is example of transferring all files from my_folder directory with extension .txt to server2 . In Below example all files will be transferred to user tom home directory.
+
+```console
+scp /my_folder/*.txt tom@server2:$HOME
+```
+
+#### * Downloading file using scp
+##### - To download a file from remote server to the local machine - type:
+
+```console
+scp tom@server2:$HOME/file.txt /local/machine/path/
+```
+
+#### _This example shows how to download the file named file.txt from user tom 's home directory to our local machine's current directory._
+----
+#### Chain of commands and operations
+##### - There are some means to chain commands together. Simple ones like just a ; or more complex ones like logical chains which run depending on some conditions. The third one is piping commands, which effectively hands over the output data to the next command in the chain.
+
+#### Counting a text pattern ocurrence Using a pipe makes the output of a command be the input of the next one.
+```console
+ls -1 | grep -c ".conf"
+```
+
+#### - In this case the output of the ls command is used as the input of the grep command. The result will be the number of files that include "`.conf`" in their name.
+#### - This can be used to contruct chains of subsequent commands as long as needed:
+```console
+ls -1 | grep ".conf" | grep -c .
+```
+
+#### - transfer root cmd output to user file Often one want to show the result of a command executed by root to other users. The tee command allows easily to write a file with user perms from a command running as root:
+```console
+su -c ifconfig | tee ~/results-of-ifconfig.txt
+```
+
+#### - Only ifconfig runs as root.
+
+#### - logical chaining of commands with && and || && chains two commands. The second one runs only if the first one exits with success. || chains two commands.
+#### - But second one runs only if first one exits with failure.
+`[ a = b ] && echo "yes" || echo "no"`
+
+#### - if you want to run more commands within a logical chain, use curly braces which designate a block of commands
+#### - They do need a ; before closing bracket so bash can diffentiate from other uses of curly braces
+```bash
+[ a = b ] && { echo "let me see."
+echo "hmmm, yes, i think it is true" ; } \
+|| { echo "as i am in the negation i think "
+echo "this is false. a is a not b." ; }
+```
+#### mind the use of line continuation sign \
+#### only needed to chain yes block with || ....
+
+#### * serial chaining of commands with semicolon
+
+#### - A semicolon separates just two commands.
+`echo "i am first" ; echo "i am second" ; echo " i am third"`
+
+#### - Chaining commands with |
+_The | takes the output of the left command and pipes it as input the right command. Mind, that this is done in a subshell. Hence you cannot set values of vars of the calling process within a pipe._
+```bash
+find . -type f -a -iname '*.mp3' | \
+while read filename; do
+    mute --noise "$filename"
+done
+```
+#### - Detect type of shell
+```console
+shopt -q login_shell && echo 'login' || echo 'not-login'
+```
+----
+#### Introduction to dot files
+##### - In Unix, files and directories beginning with a period usually contain settings for a specific program/a series of programs. Dot files are usually hidden from the user, so you would need to run ls -a to see them.
+
+* An example of a dot file is .bash_history , which contains the latest executed commands, assuming the user is using Bash.
+* There are various files that are sourced when you are dropped into the Bash shell. The image below, taken from this site, shows the decision process behind choosing which files to source at startup.
