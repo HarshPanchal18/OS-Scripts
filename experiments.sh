@@ -68,3 +68,27 @@ touch " "
 mkdir -p -- "-okgoogle"
 #or
 mkdir -- "-okgoogle"
+
+#Chmod Reset File - resets files permissions
+find . -type f -exec chmod 644 {} \;
+#Chmod Reset Folder - resets folders permissions
+find . -type d -exec chmod 744 {} \;
+
+#Deadline
+echo $(expr '(' $(date -d $2/$1/$3 +%s) - $(date +%s) + 86399 ')' / 86400) " days until deadline"
+
+#fix Dropbox
+dropbox stop && dbus-launch dropbox start
+
+#Lamp Restart/Start/Stop
+/etc/init.d/apache2 restart
+/etc/init.d/mysql restart
+
+#rmSnaps - remove old snaps
+snap list --all | while read snapname ver rev trk pub notes; do if [[ $notes = *disabled* ]]; then snap remove "$snapname" --revision="$rev"; fi; done
+
+#rmrfnm - removes node_modules recursively
+find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
+
+#Show packages
+apt-cache pkgnames | grep -i "$1" | sort
