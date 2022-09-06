@@ -60,6 +60,7 @@ This example matches any file or folder that starts with deep , regardless of ho
 #### - Character classes can be matched by [:class:] , e.g., in order to match files that contain a whitespace
 
 `echo *[[:blank:]]*` - *file with space*
+
 ----
 #### - There are a few ways to determine the current shell
 `echo $0
@@ -257,7 +258,9 @@ BASH_VERSINFO[5] = x86_64-redhat-linux-gnu
 
 `$EDITOR` - The default editor that will be involked by any scripts or programs, usually vi or emacs.
 `echo $EDITOR`
+
 ----
+
 `$HOSTNAME` - The hostname assigned to the system during startup.
 `echo $HOSTNAME` - *kali*
 
@@ -540,3 +543,106 @@ shopt -q login_shell && echo 'login' || echo 'not-login'
 
 * An example of a dot file is .bash_history , which contains the latest executed commands, assuming the user is using Bash.
 * There are various files that are sourced when you are dropped into the Bash shell. The image below, taken from this site, shows the decision process behind choosing which files to source at startup.
+
+####  Cut Command
+```text
+Parameter       Details
+-f, --fields Field-based selection
+-d, --delimiter Delimiter for field-based selection
+-c, --characters Character-based selection, delimiter ignored or error
+-s, --only-delimited Suppress lines with no delimiter characters (printed as-is otherwise)
+--complement Inverted selection (extract all except specified fields/characters
+--output-delimiter Specify when it has to be different from the input delimiter
+```
+
+##### - The cut command is a fast way to extract parts of lines of text files. It belongs to the oldest Unix commands. Its most popular implementations are the GNU version found on Linux and the FreeBSD version found on MacOS, but each flavor of Unix has its own. See below for differences. The input lines are read either from stdin or from files listed as arguments on the command line.
+
+#### - Only one delimiter character
+#### - You cannot have more than one delimiter: if you specify something like -d ",;:" , some implementations will use only the first character as a delimiter (in this case, the comma.) Other implementations (e.g. GNU cut ) will give you an error message.
+
+```bash
+cut -d ",;:" -f2 <<<"J.Smith,1 Main Road,cell:1234567890;land:4081234567"
+```
+
+#### - cut: the delimiter must be a single character
+#### - Try `cut --help` for more information.
+
+#### - Repeated delimiters are interpreted as empty fields
+```console
+cut -d, -f1,3 <<<"a,,b,c,d,e"
+```
+`a,b`
+
+#### - is rather obvious, but with space-delimited strings it might be less obvious to some
+```console
+cut -d ' ' -f1,3 <<<"a  b  cd e"
+```
+`a b`
+
+#### - cut cannot be used to parse arguments as the shell and other programs do.
+
+#### - No quoting
+#### - There is no way to protect the delimiter. Spreadsheets and similar CSV-handling software usually can recognize a text-quoting character which makes it possible to define strings containing a delimiter. With cut you cannot.
+```console
+cut -d, -f3 <<<'John,Smith,"1, Main Street"'
+```
+`"1`
+
+#### - Extracting, not manipulating
+#### - You can only extract portions of lines, not reorder or repeat fields.
+```console
+cut -d, -f2,1 <<<'John,Smith,USA' ## Just like -f1,2
+```
+`John,Smith`
+
+```console
+cut -d, -f2,2 <<<'John,Smith,USA' ## Just like -f2
+```
+`Smith`
+
+### Cut Command
+```
+Option         Description
+-b LIST , --bytes=LIST Print the bytes listed in the LIST parameter
+-c LIST , --characters=LIST Print characters in positions specified in LIST parameter
+-f LIST , --fields=LIST Print fields or columns
+-d DELIMITER Used to separate columns or fields
+```
+
+#### - Show the first column of a file
+#### - Suppose you have a file that looks like this
+```
+John Smith 31
+Robert Jones 27
+```
+
+#This file has 3 columns separated by spaces. To select only the first column, do the following.
+```console
+cut -d ' ' -f1 filename
+```
+This will display the following output
+```text
+John
+Robert
+```
+
+#### - Here the `-d` flag, specifies the delimiter, or what separates the records.
+#### The `-f` flag specifies the field or column number.
+
+#### - Show columns x to y of a file
+#### - Sometimes, its useful to display a range of columns in a file.
+#### - Suppose you have this file
+```text
+Apple California 2017 1.00 47
+Mango Oregon 2015 2.30 33
+```
+
+#### - To select the first 3 columns do
+```console
+cut -d ' ' -f1-3 filename
+```
+#### - This will display the following output
+```text
+Apple California 2017
+Mango Oregon 2015
+```
