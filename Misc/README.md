@@ -544,6 +544,92 @@ shopt -q login_shell && echo 'login' || echo 'not-login'
 * An example of a dot file is .bash_history , which contains the latest executed commands, assuming the user is using Bash.
 * There are various files that are sourced when you are dropped into the Bash shell. The image below, taken from this site, shows the decision process behind choosing which files to source at startup.
 
+#### - Color script output (cross-platform)
+`color-output.sh`
+##### - In the opening section of a bash script, it's possible to define some variables that function as helpers to color or otherwise format the terminal output during the run of the script.
+
+##### - Different platforms use different character sequences to express color. However, there's a utility called tput which works on all *nix systems and returns platform-specific terminal coloring strings via a consistent cross-platform API.
+
+* For example, to store the character sequence which turns the terminal text red or green:
+```console
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+```
+* Or, to store the character sequence which resets the text to default appearance:
+
+```console
+reset=$(tput sgr0)
+```
+
+* Then, if the BASH script needed to show different colored outputs, this can be achieved with:
+```console
+echo "${green}Success!${reset}" echo "${red}Failure.${reset}"
+```
+
+----
+
+#### - co-processes
+* create the co-process
+`coproc bash`
+
+* send a command to it (echo a)
+```console
+echo 'echo Hello World' >&"${COPROC[1]}"
+```
+* read a line from its output
+```console
+read line <&"${COPROC[0]}"
+```
+* show the line
+```console
+echo "$line"
+```
+_The output is "Hello World"._
+
+----
+
+#### - declare weakly typed variables
+- `declare` is an internal command of bash. (internal command use help for displaying "manpage"). It is used to show and define variables or show function bodies.
+
+- Syntax: `declare [options] [name[=value]]...`
+
+#### options are used to define an integer
+`declare -i myInteger` , `declare -i anotherInt=10`
+
+#### - an array with values
+`declare -a anArray=( one two three)`
+
+#### - an assoc Array
+`declare -A assocArray=( [element1]="something" [second]=anotherthing )`
+
+* note that bash recognizes the string context within []
+some modifiers exist
+
+#### - uppercase content
+`declare -u big='this will be uppercase'`
+
+#### - same for lower case
+`declare -l small='THIS WILL BE LOWERCASE'`
+
+#### - readonly array
+`declare -ra constarray=( eternal true and unchangeable )`
+
+#### - export integer to environment
+`declare -xi importantInt=42`
+
+* You can use also the + which takes away the given attribute. Mostly useless, just for completness.
+* To display variables and/or functions there are some options too
+
+----
+
+#### - printing definded vars and functions
+
+`declare -f` _restrict output to functions only_
+
+`declare -F` _if debugging prints line number and filename defined in too_
+
+----
+
 ####  Cut Command
 ```text
 Parameter       Details
