@@ -630,6 +630,47 @@ some modifiers exist
 
 ----
 
+### - Jobs at specific times
+##### - Execute job once at specific time
+* Note: at is not installed by default on most of modern distributions.
+
+* To execute a job once at some other time than now, in this example 5pm, you can use
+```console
+echo "somecommand &" | at 5pm
+```
+
+#### - If you want to catch the output, you can do that in the usual way:
+```console
+echo "somecommand > out.txt 2>err.txt &" | at 5pm
+```
+
+#### - at understands many time formats, so you can also say
+```console
+echo "somecommand &" | at now + 2 minutes
+echo "somecommand &" | at 17:00
+echo "somecommand &" | at 17:00 Jul 7
+echo "somecommand &" | at 4pm 12.03.17
+```
+
+#### - If no year or date are given, it assumes the next time the time you specified occurs. So if you give a hour that already passed today, it will assume tomorrow, and if you give a month that already passed this year, it will assume next year.
+
+#### - This also works together with nohup like you would expect.
+```console
+echo "nohup somecommand > out.txt 2>err.txt &" | at 5pm
+```
+
+* There are some more commands to control timed jobs:
+
+> atq lists all timed jobs (atqueue)
+
+> atrm removes a timed job (atremove )
+
+>batch does basically the same like at, but runs jobs only when system load is lower than 0.8
+
+* _All commands apply to jobs of the user logged in. If logged in as root, system wide jobs are handled of course._
+
+----
+
 ####  Cut Command
 ```text
 Parameter       Details
