@@ -802,3 +802,60 @@ bash select_menu.sh
 ? 3
 mac
 ```
+
+----
+
+#### - Networking commands
+
+`ifconfig` - _will show all active interface of the machine and also give the information of_
+
+1. IP address assign to interface
+2. MAC address of the interface
+3. Broadcast address
+4. Transmit and Receive bytes
+
+#### - Some example
+
+`ifconfig -a` 
+_also show the disable interface_
+
+`ifconfig eth0`
+_will only show the eth0 interface_
+
+`ifconfig eth0 192.168.1.100 netmask 255.255.255.0`
+_will assign the static IP to eth0 interface_
+
+`ifup eth0`
+_will enable the eth0 interface_
+
+`ifdown eth0`
+_will disable the eth0 interface_
+
+`ping`
+_(Packet Internet Grouper) is to test the connectivity between the two nodes_
+
+`ping -c2 8.8.8.8`
+_will ping or test the connectivity with google server for 2 seconds_
+
+`traceroute`
+_is to use in troubleshooting to find out the number of hops taken to reach the destination_
+
+`netstat`
+_(Network statistics) give the connection info and their state_
+
+`dig www.google.com`
+_(domain information grouper) query the DNS related information_
+
+`nslookup www.google.com`
+_query the DNS and find out the IP address of corresponding the website name_
+
+`route`
+_is used to check the Netwrok route information. It basically show you the routing table_
+
+`router add default gw 192.168.1.1 eth0`
+_will add the default route of network of eth0 Interface to 192.168.1.1 in routing table_
+
+`route del default`
+_will delete the default route from the routing table_
+
+----
