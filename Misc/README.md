@@ -859,3 +859,57 @@ _will add the default route of network of eth0 Interface to 192.168.1.1 in routi
 _will delete the default route from the routing table_
 
 ----
+
+#### - Parallel Jobs
+
+|Option |     Description |
+--------|-----------------
+|-j n | Run n jobs in parallel|
+|-k   |   Keep same order|
+|-X     | Multiple arguments with context replace|
+|--colsep regexp   |  Split input on regexp for positional replacements |
+| {} {.} {/} {/.} {#} | Replacement strings |
+| {3} {3.} {3/} {3/.} | Positional replacement strings |
+
+-S sshlogin Example: foo@server.example.com
+
+| | |
+|---------------|----------|
+|--trc {}.bar  |      Shorthand for --transfer --return {}.bar --cleanup |
+|--onall        |     Run the given command with argument on all sshlogins |
+|--nonall       |     Run the given command with no arguments on all sshlogins |
+|--pipe          |    Split stdin (standard input) to multiple jobs. | 
+|--recend str    |    Record end separator for --pipe. | 
+|--recstart str      | Record start separator for --pipe. |
+
+#### - Jobs in GNU Linux can be parallelized using GNU parallel.
+* A job can be a single command or a small script that has to be run for each of the lines in the input. The typical input is a list of files, a list of hosts, a list of users, a list of URLs, or a list of tables.
+* A job can also be a command that reads from a pipe.
+
+
+#### - Parallelize repetitive tasks on list of files
+* Many repetitive jobs can be performed more efficiently if you utilize more of your computers resources (i.e. CPUs and RAM). Below is an example of running multiple jobs in parallel.
+
+#### - Suppose you have a < list of files > , say output from ls . Also, let these files are bz2 compressed and the following order of tasks need to be operated on them.
+
+#### - Running this using a while-loop may look like this
+```bash
+filenames="file_list.txt"
+while read -r line
+do
+    name="$line"
+    ## grab lines with puppies in them
+    bzcat $line | grep puppies | gzip >> output.gz
+done < "$filenames"
+```
+
+#### - Using GNU Parallel, we can run 3 parallel jobs at once by simply doing
+```console
+parallel -j 3 "bzcat {} | grep puppies" ::: $( cat filelist.txt ) | gzip > output.gz
+```
+
+#### - This command is simple, concise and more efficient when number of files and file size is large. The jobs gets initiated by parallel , option `-j 3` launches 3 parallel jobs and input to the parallel jobs is taken in by ` ::: ` .
+
+* The output is eventually piped to `gzip > output.gz`
+
+----
