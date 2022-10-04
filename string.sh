@@ -311,3 +311,10 @@ do
 done <<< "$var"
 
 echo "${arr[4]}"
+
+#If a string is 10 characters long or not
+read -p "Enter Name: " nm
+
+l=`expr "$nm" : '.*'`
+
+[ $l -gt 10 ] && echo "Name must be having less than 10 characters" || echo "Hello $nm"
