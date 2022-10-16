@@ -913,3 +913,81 @@ parallel -j 3 "bzcat {} | grep puppies" ::: $( cat filelist.txt ) | gzip > outpu
 * The output is eventually piped to `gzip > output.gz`
 
 ----
+
+#### - Decoding URL
+
+##### - Simple example
+
+#### - Encoded URL
+`http%3A%2F%2Fwww.foo.com%2Findex.php%3Fid%3Dqwerty`
+
+#### - Use this command to decode the URL
+```console
+echo "http%3A%2F%2Fwww.foo.com%2Findex.php%3Fid%3Dqwerty" | sed -e "s/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g" | xargs -0 echo -e
+```
+
+#### - Decoded URL (result of command)
+```console
+http://www.foo.com/index.php?id=qwerty
+```
+
+#### - Using printf to decode a string
+```bash
+string='Question%20-
+%20%22how%20do%20I%20decode%20a%20percent%20encoded%20string%3F%22%0AAnswer%20%20%20-%20Use%20printf%20%3A)'
+printf '%b\n' "${string//%/\\x}"
+```
+
+#### - the result
+* Question - "how do I decode a percent encoded string?"
+* Answer - Use printf :)
+
+```console
+set -e
+cd ~/non/existent/directory
+rm -rf *
+```
+
+`set -e` tells Bash to exit the script immediately if any command returns a non-zero status.
+
+#### - Missing The Last Line in a File
+#### - The C standard says that files should end with a new line, so if EOF comes at the end of a line, that line may not be missed by some commands. As an example:
+
+```console
+echo 'one\ntwo\nthree\c' > file.txt
+```
+
+```console
+cat file.txt
+one
+two
+three
+```
+
+```bash
+while read line ; do echo "line $line" ; done < file.txt
+```
+one
+
+two
+
+#### - To make sure this works correctly for in the above example, add a test so that it will continue the loop if the last line is not empty.
+
+```bash
+while read line || [ -n "$line" ] ; do echo "line $line" ; done < file.txt
+```
+
+one
+
+two
+
+three
+
+#### - Write awk script to display file contents in reverse.(last line should be displayed first ..first line should be displayed last).
+```awk
+awk '{ a[ i++ ]=$0}
+END{for( j=i-1; j>=0; j-- )
+print a[ j ];}' nidhi1
+```
+
+----
