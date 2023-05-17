@@ -24,5 +24,10 @@ or
 ```
 bash file.sh
 ```
+* For Applescripts
+```
+osascript file.applescript
+```
 ----
 * Feel free to contribute!
+
